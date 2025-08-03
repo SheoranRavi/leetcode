@@ -1,4 +1,5 @@
 // https://leetcode.com/problems/maximal-rectangle/
+// chatgpt conversation: https://chatgpt.com/c/688e3c95-8058-8000-a7db-c16b9ad8c980
 package hard
 
 import (

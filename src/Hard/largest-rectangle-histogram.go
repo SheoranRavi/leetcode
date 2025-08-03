@@ -1,5 +1,7 @@
 // https://leetcode.com/problems/largest-rectangle-in-histogram/description/
 
+// chatgpt conversation: https://chatgpt.com/c/688e3c95-8058-8000-a7db-c16b9ad8c980
+
 // simple solution that calculates the longest sequence of height at least h for each height in the 0 to maxHeight + 1 range
 // Gives TLE
 
