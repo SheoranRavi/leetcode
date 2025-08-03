@@ -1,4 +1,5 @@
 // https://leetcode.com/problems/longest-continuous-increasing-subsequence/
+package easy
 
 func findLengthOfLCIS(nums []int) int {
 	// l := 0

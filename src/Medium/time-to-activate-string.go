@@ -1,4 +1,5 @@
 // https://leetcode.com/contest/weekly-contest-461/problems/minimum-time-to-activate-string/description/
+package medium
 
 func minTime(s string, order []int, k int) int {
 	// instead of tracking the valid substrings, it's easier to track the clean substrings

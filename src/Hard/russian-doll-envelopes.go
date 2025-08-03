@@ -3,6 +3,13 @@
 // tle solution uses dynamic programming and has a time complexity O(n^2)
 // this is same as longest increasing subsequence
 
+package hard
+
+import (
+	"cmp"
+	"slices"
+)
+
 func maxEnvelopes(envelopes [][]int) int {
 	// [2,3] [5,4] [6,4] [6,7] [7, 5]
 	slices.SortFunc(envelopes, func(a, b []int) int {

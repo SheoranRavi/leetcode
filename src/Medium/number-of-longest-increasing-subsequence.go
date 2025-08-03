@@ -1,6 +1,7 @@
 // https://leetcode.com/problems/number-of-longest-increasing-subsequence/
 // chatgpt conversation link: https://chatgpt.com/c/6887626b-ff18-8000-bc18-a40516d11854
 // tag:HARD   (this is actually a hard level question)
+package medium
 
 func findNumberOfLIS(nums []int) int {
 	n := len(nums)

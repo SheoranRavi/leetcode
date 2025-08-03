@@ -134,17 +134,17 @@ func RunDijkstra(distances *[]int, adj map[int][]Edge, pq *PQ, n int) {
 func topologicalSort(n int, adjList map[int][]Edge) []int {
 	visited := make([]bool, n+1)
 	stack := make([]int, 0)
-	dfs(visited, adjList, 1, &stack)
+	dfs_curr(visited, adjList, 1, &stack)
 	slices.Reverse(stack)
 	return stack
 }
 
-func dfs(visited []bool, adjList map[int][]Edge, node int, stack *[]int) {
+func dfs_curr(visited []bool, adjList map[int][]Edge, node int, stack *[]int) {
 	visited[node] = true
 	edges := adjList[node]
 	for _, edge := range edges {
 		if !visited[edge.dest] {
-			dfs(visited, adjList, edge.dest, stack)
+			dfs_curr(visited, adjList, edge.dest, stack)
 		}
 	}
 	*stack = append(*stack, node)

@@ -3,6 +3,10 @@
 // simple solution that calculates the longest sequence of height at least h for each height in the 0 to maxHeight + 1 range
 // Gives TLE
 
+package hard
+
+import "slices"
+
 func largestRectangleArea(heights []int) int {
 	maxHeight := 0
 	for _, val := range heights {

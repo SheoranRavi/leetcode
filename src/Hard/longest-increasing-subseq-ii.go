@@ -2,6 +2,8 @@
 
 // solving it with usual dp results in TLE
 
+package hard
+
 func lengthOfLIS(nums []int, k int) int {
 	// dp[i] = max(dp[i], dp[j]+1)
 	// let's try to solve it the same way we did the longest increasing subsequence
