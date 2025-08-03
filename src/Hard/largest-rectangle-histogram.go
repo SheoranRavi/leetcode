@@ -5,7 +5,10 @@
 
 package hard
 
-import "slices"
+import (
+	stk "leetcode/collections/stack"
+	"slices"
+)
 
 func largestRectangleArea(heights []int) int {
 	maxHeight := 0
@@ -42,8 +45,8 @@ func largestRectangleArea(heights []int) int {
 	//      then multiply by width to get the area for this rectangle
 	// two stacks prevSmaller and nextSmaller -> use for getting the index
 	// two arrays prev, next -> store index of prev smaller and next smaller element
-	prevSmaller := NewStack()
-	nextSmaller := NewStack()
+	prevSmaller := stk.NewStack()
+	nextSmaller := stk.NewStack()
 	prev := make([]int, 0)
 	next := make([]int, 0)
 	for idx, v := range heights {
@@ -99,39 +102,4 @@ func largestRectangleArea(heights []int) int {
 	}
 	return maxArea
 
-}
-
-type Stack struct {
-	stack []int
-	n     int
-}
-
-func NewStack() Stack {
-	return Stack{
-		stack: make([]int, 0),
-		n:     0,
-	}
-}
-
-func (this *Stack) Pop() any {
-	if this.n == 0 {
-		return nil
-	}
-	old := this.stack
-	item := old[this.n-1:]
-	this.stack = old[:this.n-1]
-	this.n--
-	return item[0]
-}
-
-func (this *Stack) Peek() any {
-	if this.n == 0 {
-		return nil
-	}
-	return this.stack[this.n-1]
-}
-
-func (this *Stack) Push(item int) {
-	this.stack = append(this.stack, item)
-	this.n++
 }
