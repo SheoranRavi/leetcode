@@ -124,6 +124,8 @@ func minCost2(maxTime int, edges [][]int, passingFees []int) int {
 			currTime := currItem.time + edge.time
 			currCost := currItem.cost + passingFees[edge.d]
 			if currTime <= maxTime && currCost < minCost[edge.d][currTime] {
+				// forgot to update the minCost for this node, which leads to TLE
+				minCost[edge.d][currTime] = currCost
 				heap.Push(pq, &Item{
 					node: edge.d,
 					time: currTime,
