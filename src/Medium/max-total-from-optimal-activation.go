@@ -7,6 +7,11 @@ import (
 	"slices"
 )
 
+// a much easier solution is to group the elements by their limit
+// then pick the group.limit highger value elements from each group
+// this works because each limit only prevents elements of that group from being picked
+// higher limits are not impacted
+
 func maxTotal(value []int, limit []int) int64 {
 	// sort by limit ascending, and value descending
 	// process the list
