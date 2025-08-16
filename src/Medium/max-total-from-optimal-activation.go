@@ -11,8 +11,32 @@ import (
 // then pick the group.limit highger value elements from each group
 // this works because each limit only prevents elements of that group from being picked
 // higher limits are not impacted
-
 func maxTotal(value []int, limit []int) int64 {
+	// group all values by their limits
+	maxValue := len(limit)
+	groups := make([][]int, maxValue+1)
+	for i := range limit {
+		// add this value to the corresponding limit group
+		groups[limit[i]] = append(groups[limit[i]], value[i])
+	}
+	var res int64
+	// iterate over groups and select the highest group[limit] elements from each group
+	for l, g := range groups {
+		if len(g) > 0 {
+			slices.SortFunc(g, func(a, b int) int {
+				return cmp.Compare(b, a)
+			})
+			n := len(g)
+			for i := 0; i < n && i < l; i++ {
+				res += int64(g[i])
+			}
+		}
+	}
+	return res
+}
+
+// This version uses heap
+func maxTotalUsingHeap(value []int, limit []int) int64 {
 	// sort by limit ascending, and value descending
 	// process the list
 	// put each in a min heap by limit
