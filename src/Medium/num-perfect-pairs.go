@@ -13,8 +13,8 @@ func perfectPairs(nums []int) int64 {
 	// take absolute value of all nums
 	// sort it
 	// evaluate whether the current is a perfect pair
-	// if it is, increase j
-	// if it isn't then increase i
+	// increase j till it forms perfect pairs
+	// then increase i
 	n := len(nums)
 	nums2 := make([]int, len(nums))
 	for i, v := range nums {
