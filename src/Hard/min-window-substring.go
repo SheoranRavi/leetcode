@@ -89,10 +89,10 @@ func minWindow(s string, t string) string {
 			}
 			endPtr++
 		}
+		// if endPtr has reached len(s) then we can't form any more windows
 		if endPtr >= len(s) {
 			break
 		}
-		// ADOBECODEBANC
 		fmt.Println("endPtr after coming in:", endPtr)
 		// now window length has increased again so we won't update minLen here
 	}
