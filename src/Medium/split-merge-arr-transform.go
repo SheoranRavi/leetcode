@@ -7,6 +7,7 @@
 package medium
 
 import (
+	"container/list"
 	"strconv"
 	"strings"
 )
@@ -86,4 +87,59 @@ func toStr(arr []int) string {
 		sb.WriteString(strconv.Itoa(v))
 	}
 	return sb.String()
+}
+
+func minSplitMergeBfs(nums1 []int, nums2 []int) int {
+	return bfs(nums1, nums2)
+}
+
+// BFS works much better for shortest path
+func bfs(start, target []int) int {
+	if isEqual(start, target) {
+		return 0
+	}
+	visited := make(map[string]bool)
+	queue := list.New()
+	queue.PushBack(node{start, 0})
+	visited[toStr(start)] = true
+
+	for queue.Len() > 0 {
+		elem := queue.Front()
+		queue.Remove(elem)
+		state := elem.Value.(node)
+		arr := state.arr
+		steps := state.steps
+
+		// generate next states
+		n := len(arr)
+		for L := 0; L < n-1; L++ {
+			for R := L; R < n; R++ {
+				sub := append([]int(nil), arr[L:R+1]...)
+				remArr := append([]int(nil), arr[:L]...)
+				remArr = append(remArr, arr[R+1:]...)
+
+				for i := 0; i <= len(remArr); i++ {
+					newArr := append([]int(nil), remArr[:i]...)
+					newArr = append(newArr, sub...)
+					newArr = append(newArr, remArr[i:]...)
+
+					if isEqual(newArr, target) {
+						return steps + 1
+					}
+
+					key := toStr(newArr)
+					if !visited[key] {
+						visited[key] = true
+						queue.PushBack(node{newArr, steps + 1})
+					}
+				}
+			}
+		}
+	}
+	return -1
+}
+
+type node struct {
+	arr   []int
+	steps int
 }
