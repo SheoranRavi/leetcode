@@ -1,13 +1,3 @@
-// https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
-
-package hard
-
-import (
-	"container/heap"
-	"fmt"
-	"strconv"
-)
-
 func smallestRange(nums [][]int) []int {
 	// keep pointer at beginning of each list
 	// initial range would be min to max
@@ -20,10 +10,8 @@ func smallestRange(nums [][]int) []int {
 	// heap item: {i, j}. i to stay fixed, j to move up by 1
 	k := len(nums)
 	pq := &PriorityQueue{}
-	maxPq := &PriorityQueue{}
 	heap.Init(pq)
-	heap.Init(maxPq)
-	maxMap := make(map[string]bool)
+	currMax := -1 << 32
 	for i := range k {
 		item := Item{
 			value: nums[i][0],
@@ -31,53 +19,28 @@ func smallestRange(nums [][]int) []int {
 			j:     0,
 		}
 		heap.Push(pq, &item)
-		maxItem := Item{
-			value: -nums[i][0],
-			i:     i,
-			j:     0,
-		}
-		maxMap[getKey(i, 0)] = true
-		heap.Push(maxPq, &maxItem)
+		currMax = max(currMax, nums[i][0])
 	}
 	currItem := heap.Pop(pq).(*Item)
-	currMaxItem := heap.Pop(maxPq).(*Item)
 	start := currItem.value
-	end := -currMaxItem.value
+	end := currMax
 	minDiff := end - start
-	// put it back in q, we just wanted to peek it
-	heap.Push(maxPq, currMaxItem)
 	// iterate until one of the items reaches its end
 	for currItem.j < len(nums[currItem.i])-1 {
-		// invalidate this item from the max pq
-		maxMap[getKey(currItem.i, currItem.j)] = false
 		currItem.j++
 		currItem.value = nums[currItem.i][currItem.j]
 		heap.Push(pq, currItem)
-		maxItem := Item{
-			value: -currItem.value,
-			i:     currItem.i,
-			j:     currItem.j,
-		}
-		maxMap[getKey(currItem.i, currItem.j)] = true
-		heap.Push(maxPq, &maxItem)
+		currMax = max(currMax, currItem.value)
 		currItem = heap.Pop(pq).(*Item)
-		// refresh the max item (no heap.Peek method otherwise need to use that)
-		currMaxItem = heap.Pop(maxPq).(*Item)
-		for maxMap[getKey(currMaxItem.i, currMaxItem.j)] != true {
-			fmt.Println("To be discarded from maxPq", currMaxItem.value)
-			currMaxItem = heap.Pop(maxPq).(*Item)
-		}
 		tempStart := currItem.value
-		tempEnd := -currMaxItem.value
-		fmt.Println("tempStart and end:", tempStart, ":", tempEnd)
+		tempEnd := currMax
+		//fmt.Println("tempStart and end:", tempStart, ":", tempEnd)
 		diff := tempEnd - tempStart
 		if diff < minDiff {
 			minDiff = diff
 			start = tempStart
 			end = tempEnd
 		}
-		// push the max item back
-		heap.Push(maxPq, currMaxItem)
 	}
 
 	return []int{start, end}
