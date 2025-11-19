@@ -1,99 +1,58 @@
 // https://leetcode.com/problems/substring-with-concatenation-of-all-words/
 package hard
 
-import "fmt"
-
 func findSubstring(s string, words []string) []int {
-	// create a map containing freq of all words
-	// set window size to size of word
-	// move the window over s
-	// if windowString in set, then one check starts
-	//  during the check put the current word into another map
-	//  also count the number of matched words
-	//  also check in the 2nd set if the current word is present and freq > word freq
-	//      if present then start the check again
-	//          re-initialize the 2nd set
-	//          reset the count
-	//  if count == len(words) then add the startIndex to result set
-	winSize := len(words[0])
-	set := make(map[string]int)
-	for _, w := range words {
-		set[w]++
+	wordLen := len(words[0])
+	wordCount := len(words)
+	totalLen := wordCount * wordLen
+	if totalLen > len(s) {
+		return []int{}
 	}
-	winR := make([]rune, 0)
-	for i, r := range s {
-		if i == winSize-1 {
-			// break one step before
-			break
-		}
-		winR = append(winR, r)
-	}
-	win := string(winR)
 
-	checking := false
-	count := len(words)
-	otherSet := make(map[string]int)
+	target := make(map[string]int)
+	for _, w := range words {
+		target[w]++
+	}
+
 	res := []int{}
-	startIdx := 0
-	for i := winSize - 1; i < len(s); {
-		if len(winR) == winSize {
-			winR = winR[1:]
-		}
-		r := rune(s[i])
-		winR = append(winR, r)
-		win = string(winR)
-		if freq, ok := set[win]; ok {
-			if checking == false {
-				startIdx = i - winSize + 1
-				checking = true
-			}
-			if freqTrack := otherSet[win]; freqTrack == freq {
-				// means it has appeared more times now
-				otherSet = make(map[string]int)
-				otherSet[win] = 1
-				count = len(words) - 1
-				i -= (freq - 1) * winSize
-				startIdx = i - winSize + 1
+	for offset := 0; offset < wordLen; offset++ {
+		left := offset
+		curr := make(map[string]int)
+		// number of matches in current window
+		count := 0
+		for j := offset; j+wordLen <= len(s); j += wordLen {
+			word := s[j : j+wordLen]
+			if _, ok := target[word]; ok {
+				curr[word]++
+
+				if curr[word] <= target[word] {
+					count++
+				}
+				// if freq of word exceeds target, need to shrink
+				for curr[word] > target[word] {
+					leftWord := s[left : left+wordLen]
+					curr[leftWord]--
+					left += wordLen
+					// I do not understand this
+					if curr[leftWord] < target[leftWord] {
+						count--
+					}
+				}
+
+				if count == wordCount {
+					res = append(res, left)
+					leftWord := s[left : left+wordLen]
+					// continue searching by just moving the left
+					curr[leftWord]--
+					left += wordLen
+					count--
+				}
 			} else {
-				count--
-				otherSet[win]++
+				// reset everything
+				left = j + wordLen
+				curr = make(map[string]int)
+				count = 0
 			}
-			// i needs to be incremented by winSize
-			// winSize - 1 runes to be slid
-			for j := range winSize - 1 {
-				if i+j+1 >= len(s) {
-					break
-				}
-				winR = winR[1:]
-				r = rune(s[i+j+1])
-				winR = append(winR, r)
-				win = string(winR)
-			}
-			i += winSize
-		} else {
-			checking = false
-			i++
-		}
-		fmt.Println("win:", win)
-		fmt.Println("curr count:", count)
-		fmt.Println("other set:", otherSet)
-		fmt.Println("start Idx:", startIdx)
-		if count == 0 {
-			res = append(res, startIdx)
-			otherSet = make(map[string]int)
-			count = len(words)
-			// now it must start from the previous place
-			startIdx += winSize
-			i = startIdx
-			winR = []rune{}
-			for j := range winSize - 1 {
-				if i+j+1 >= len(s) {
-					break
-				}
-				r = rune(s[i+j+1])
-				winR = append(winR, r)
-			}
-			win = string(winR)
 		}
 	}
 	return res
