@@ -26,9 +26,28 @@ func findItinerary(tickets [][]string) []string {
 	}
 	// now run the algorithm
 	res := make([]string, 0)
-	dfs("JFK", adj, &res)
+	//dfs("JFK", adj, &res)
+	eulerianPath("JFK", adj, &res)
 	slices.Reverse(res)
 	return res
+}
+
+func eulerianPath(s string, adj map[string][]string, res *[]string) {
+	st := make([]string, 0, 500)
+	st = append(st, s)
+	for len(st) > 0 {
+		curr := st[len(st)-1]
+		if len(adj[curr]) > 0 {
+			e := adj[curr][0]
+			// remove this edge
+			adj[curr] = adj[curr][1:]
+			st = append(st, e)
+		} else {
+			// pop curr from the stack
+			st = st[:len(st)-1]
+			*res = append(*res, curr)
+		}
+	}
 }
 
 func dfs(s string, adj map[string][]string, res *[]string) {
